@@ -9,6 +9,8 @@ const txtInput = document.querySelector('.new-todo');
 const btnBorrar = document.querySelector('.clear-completed');
 const ulFilters = document.querySelector('.filters');
 const anchorFiltros = document.querySelectorAll('.filtro');
+const pendientes = document.querySelector('.todo-count strong');
+let count = 0;
 
 export const crearTodoHtml = (todo) => {
 
@@ -29,6 +31,7 @@ export const crearTodoHtml = (todo) => {
     divTodoList.append(div.firstElementChild);
 
     return div.firstElementChild;
+
 }
 
 
@@ -44,26 +47,44 @@ txtInput.addEventListener('keyup', (event) => {
         crearTodoHtml(nuevoTodo);
         txtInput.value = '';
     }
-
+    count = 0;
+    for(const elemento of todoList.todos)
+    {   
+        if(!elemento.completado)
+        {
+            count++;
+        }
+    }
+    pendientes.innerHTML = count;
 });
 
 divTodoList.addEventListener('click', (event) => {
     const nombreElemento = event.target.localName;
     const todoElemento = event.target.parentElement.parentElement;
     const todoId = todoElemento.getAttribute('data-id');
-
+    
     
 
     if (nombreElemento.includes('input'))
     {
         todoList.marcarCompletado(todoId);
         todoElemento.classList.toggle('completed');
+
     }
     else if (nombreElemento.includes('button'))
     {
         todoList.eliminarTodo(todoId);
         divTodoList.removeChild(todoElemento);
     }
+    count = 0;
+    for(const elemento of todoList.todos)
+    {   
+        if(!elemento.completado)
+        {
+            count++;
+        }
+    }
+    pendientes.innerHTML = count;
 })
 
 btnBorrar.addEventListener('click', (event) => {
